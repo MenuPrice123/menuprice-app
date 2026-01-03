@@ -8,12 +8,16 @@ import './styles/globals.css'
 
 const queryClient = new QueryClient()
 
+import { CartProvider } from './context/CartContext'
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <CartProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </CartProvider>
     </QueryClientProvider>
   </React.StrictMode>
 )

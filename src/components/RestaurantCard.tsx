@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { MapPin, ChefHat, Star, Sparkles } from "lucide-react";
 
 interface RestaurantCardProps {
@@ -15,6 +16,7 @@ interface RestaurantCardProps {
 }
 
 export const RestaurantCard = ({
+  id,
   name,
   type,
   cuisinePrimary,
@@ -57,9 +59,12 @@ export const RestaurantCard = ({
           <MapPin className="w-4 h-4 text-purple-400 flex-shrink-0 mt-0.5" />
           <span className="line-clamp-1">{address}</span>
         </div>
-        <button className="w-full py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-xl hover:shadow-purple-500/50">
-          View Menu
-        </button>
+
+        <Link to={`/restaurant/${id}`} className="w-full block">
+          <button className="w-full py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-xl hover:shadow-purple-500/50">
+            View Menu
+          </button>
+        </Link>
       </div>
 
       {isHovered && (

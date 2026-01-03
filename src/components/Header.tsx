@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { ChefHat, Menu, X } from "lucide-react";
+import { CartSheet } from "./CartSheet";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -57,6 +58,7 @@ export const Header = () => {
             <button onClick={() => scrollToSection("hero")}>Home</button>
             <button onClick={() => scrollToSection("restaurants")}>Restaurants</button>
             <button onClick={() => scrollToSection("about")}>About</button>
+            <CartSheet />
 
             {!isAuthenticated ? (
               <button
@@ -75,13 +77,14 @@ export const Header = () => {
             )}
           </div>
 
-          {/* Mobile Menu Toggle */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden"
-          >
-            {mobileMenuOpen ? <X /> : <Menu />}
-          </button>
+          <div className="flex items-center gap-4 md:hidden">
+            <CartSheet />
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X /> : <Menu />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}

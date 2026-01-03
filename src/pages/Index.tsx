@@ -7,12 +7,13 @@ import { SearchBar } from "@/components/SearchBar";
 import { RestaurantCard } from "@/components/RestaurantCard";
 import { TrendingUp, Loader2, CheckCircle, Clock, DollarSign } from "lucide-react";
 import type { Restaurant } from "@/types/restaurant";
+import { MOCK_RESTAURANTS } from "@/data/mockData";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
-  // ✅ AUTH GUARD (FIX)
+  // ✅ AUTH GUARD
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       if (!data.session) {
@@ -24,17 +25,13 @@ const Index = () => {
   const { data: restaurants, isLoading } = useQuery<Restaurant[]>({
     queryKey: ["restaurants"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("restaurants")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-      return data as Restaurant[];
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      return MOCK_RESTAURANTS;
     },
   });
 
-  // ✅ NULL-SAFE FILTER (IMPORTANT FIX)
+  // ✅ NULL-SAFE FILTER
   const filteredRestaurants = useMemo(() => {
     if (!restaurants) return [];
     if (!searchQuery.trim()) return restaurants;
