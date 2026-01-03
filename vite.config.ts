@@ -11,7 +11,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['vite.svg'],
+      includeAssets: ['vite.svg', 'pwa-192x192.png', 'pwa-512x512.png'],
       devOptions: {
         enabled: true
       },
@@ -22,14 +22,14 @@ export default defineConfig({
         theme_color: '#ffffff',
         icons: [
           {
-            src: 'vite.svg',
+            src: 'pwa-192x192.png',
             sizes: '192x192',
-            type: 'image/svg+xml'
+            type: 'image/png'
           },
           {
-            src: 'vite.svg',
+            src: 'pwa-512x512.png',
             sizes: '512x512',
-            type: 'image/svg+xml'
+            type: 'image/png'
           }
         ]
       }
