@@ -10,4 +10,6 @@ export interface Restaurant {
   address: string;
   is_verified: boolean;
   created_at?: string;
+  external_url?: string;
+  description?: string;
 }

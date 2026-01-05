@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { MapPin, ChefHat, Star, Sparkles } from "lucide-react";
+import { Star } from "lucide-react";
 
 interface RestaurantCardProps {
   id: string;
@@ -13,70 +13,92 @@ interface RestaurantCardProps {
   logo: string;
   address: string;
   isVerified: boolean;
+  externalUrl?: string;
+  description?: string;
 }
 
 export const RestaurantCard = ({
   id,
   name,
-  type,
   cuisinePrimary,
-  priceRange,
   coverImage,
-  logo,
-  address,
-  isVerified,
+  externalUrl,
+  description,
 }: RestaurantCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  return (
+  const rating = (4.0 + Math.random() * 1).toFixed(1);
+
+  const CardContent = () => (
     <div
-      className="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 transform hover:-translate-y-2 hover-lift"
+      className="restaurant-card"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative h-48 overflow-hidden">
-        <img src={coverImage} alt={name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        <div className="absolute -bottom-6 left-4 w-16 h-16 rounded-full border-4 border-white shadow-lg overflow-hidden bg-white transition-transform duration-300 group-hover:scale-110">
-          <img src={logo} alt={`${name} logo`} className="w-full h-full object-cover" />
-        </div>
-        <div className="absolute top-4 right-4 animate-fade-in">
-          <span className="px-3 py-1 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-xs font-semibold rounded-full shadow-lg backdrop-blur-sm">{type}</span>
-        </div>
-      </div>
+      {/* Image Section */}
+      <div className="relative overflow-hidden">
+        <img
+          src={coverImage}
+          alt={name}
+          className="restaurant-card-image"
+        />
 
-      <div className="p-5 pt-8">
-        <div className="flex items-start justify-between mb-2">
-          <h3 className="text-lg font-bold text-gray-900 group-hover:text-purple-600 transition-colors duration-300">{name}</h3>
-          {isVerified && <Star className="w-5 h-5 text-purple-600 fill-purple-600 animate-pulse" />}
-        </div>
-        <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
-          <ChefHat className="w-4 h-4 text-purple-500" />
-          <span>{cuisinePrimary}</span>
-          <span className="text-purple-600 font-semibold">{priceRange}</span>
-        </div>
-        <div className="flex items-start gap-2 text-xs text-gray-500 mb-4">
-          <MapPin className="w-4 h-4 text-purple-400 flex-shrink-0 mt-0.5" />
-          <span className="line-clamp-1">{address}</span>
-        </div>
-
-        <Link to={`/restaurant/${id}`} className="w-full block">
-          <button className="w-full py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-xl hover:shadow-purple-500/50">
-            View Menu
+        {/* Hover Overlay with View Menu Button */}
+        <div className={`absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
+          <button className="view-menu-btn">
+            {externalUrl ? "Visit Website" : "View Menu"}
           </button>
-        </Link>
+        </div>
       </div>
 
-      {isHovered && (
-        <>
-          <div className="absolute top-4 left-4 animate-ping">
-            <Sparkles className="w-6 h-6 text-purple-400" />
-          </div>
-          <div className="absolute bottom-4 right-4 animate-ping" style={{ animationDelay: '0.5s' }}>
-            <Sparkles className="w-4 h-4 text-purple-300" />
-          </div>
-        </>
-      )}
+      {/* Content Section */}
+      <div className="p-4">
+        <h3 className="text-lg font-bold text-gray-900 mb-1">
+          {name}
+        </h3>
+
+        <p className="text-sm text-gray-600 mb-3">
+          Cuisine: {cuisinePrimary}
+        </p>
+
+        {/* Description - Swiggy/Zomato style */}
+        {description && (
+          <p className="text-xs text-gray-500 mb-3 line-clamp-3 leading-relaxed">
+            {description}
+          </p>
+        )}
+
+        <div className="flex items-center gap-1 mb-3">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <Star
+              key={star}
+              className={`w-4 h-4 ${parseFloat(rating) >= star
+                  ? 'star fill-current'
+                  : 'text-gray-300'
+                }`}
+            />
+          ))}
+        </div>
+
+        <div className="price-badge">
+          ₹ Price for two
+        </div>
+      </div>
     </div>
+  );
+
+  // If external URL exists, use anchor tag, otherwise use Link
+  if (externalUrl) {
+    return (
+      <a href={externalUrl} target="_blank" rel="noopener noreferrer">
+        <CardContent />
+      </a>
+    );
+  }
+
+  return (
+    <Link to={`/restaurant/${id}`}>
+      <CardContent />
+    </Link>
   );
 };
