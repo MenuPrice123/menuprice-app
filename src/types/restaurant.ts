@@ -9,6 +9,8 @@ export interface Restaurant {
   logo: string;
   address: string;
   is_verified: boolean;
+  rating?: number;
+  is_veg?: boolean;
   created_at?: string;
   external_url?: string;
   description?: string;
