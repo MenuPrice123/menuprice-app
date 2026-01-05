@@ -26,7 +26,26 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         created_at: new Date().toISOString(),
         // @ts-ignore - Adding custom fields for external link
         external_url: "https://varalakshmitiffins.com",
-        description: "Varalakshmi Tiffins is a well-established South Indian vegetarian quick-service restaurant (QSR) brand headquartered in Hyderabad, widely recognized for its operational consistency, authentic flavor profile, and high customer throughput. Over the years, it has positioned itself as a go-to breakfast and tiffin destination for both locals and visitors."
+        description: "Varalakshmi Tiffins is a well-established South Indian vegetarian quick-service restaurant (QSR) brand headquartered in Hyderabad, widely recognized for its operational consistency, authentic flavor profile, and high customer throughput. Over the years, it has positioned itself as a go-to breakfast and tiffin destination for both locals and visitors.",
+        rating: 4.5,
+        is_veg: true
+    },
+    {
+        id: "r2",
+        name: "Burger King",
+        slug: "burger-king",
+        type: "Fast Food",
+        cuisine_primary: "Burger",
+        price_range: "₹₹",
+        cover_image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=800&q=80",
+        logo: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=800&q=80",
+        address: "Hyderabad",
+        is_verified: true,
+        created_at: new Date().toISOString(),
+        external_url: "https://burgerking.in",
+        description: "Burger King is an American multinational chain of hamburger fast food restaurants.",
+        rating: 4.2,
+        is_veg: false
     }
 ];
 

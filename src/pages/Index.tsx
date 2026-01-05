@@ -31,18 +31,74 @@ const Index = () => {
     },
   });
 
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+
+  const handleFilterChange = (filterId: string) => {
+    setActiveFilters(prev => {
+      // Handle mutual exclusivity for Veg/Non-Veg
+      if (filterId === 'pure-veg' && !prev.includes('pure-veg')) {
+        return [...prev.filter(f => f !== 'non-veg'), 'pure-veg'];
+      }
+      if (filterId === 'non-veg' && !prev.includes('non-veg')) {
+        return [...prev.filter(f => f !== 'pure-veg'), 'non-veg'];
+      }
+
+      return prev.includes(filterId)
+        ? prev.filter(f => f !== filterId)
+        : [...prev, filterId];
+    });
+  };
+
+  const handleClearFilters = () => {
+    setActiveFilters([]);
+  };
+
   const filteredRestaurants = useMemo(() => {
     if (!restaurants) return [];
-    if (!searchQuery.trim()) return restaurants;
 
-    const query = searchQuery.toLowerCase();
-    return restaurants.filter(
-      (r) =>
-        r.name?.toLowerCase().includes(query) ||
-        r.cuisine_primary?.toLowerCase().includes(query) ||
-        r.type?.toLowerCase().includes(query)
-    );
-  }, [restaurants, searchQuery]);
+    // First apply search query if exists
+    let result = restaurants;
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        (r) =>
+          r.name?.toLowerCase().includes(query) ||
+          r.cuisine_primary?.toLowerCase().includes(query) ||
+          r.type?.toLowerCase().includes(query)
+      );
+    }
+
+    // Then apply category filter if selected
+    if (selectedCategory) {
+      const category = selectedCategory.toLowerCase().replace(/-/g, " ");
+      result = result.filter(
+        (r) =>
+          r.cuisine_primary?.toLowerCase().includes(category) ||
+          r.type?.toLowerCase().includes(category)
+        // Note: In a real app we would check menu tags too, assuming they are indexed on the restaurant
+        // or we would join with menu items. For now we use the top level tags.
+      );
+    }
+
+    // Then apply active filters from FilterBar
+    if (activeFilters.length > 0) {
+      if (activeFilters.includes('pure-veg')) {
+        result = result.filter(r => r.is_veg === true);
+      }
+      if (activeFilters.includes('non-veg')) {
+        result = result.filter(r => r.is_veg === false);
+      }
+      if (activeFilters.includes('rating-3')) {
+        result = result.filter(r => (r.rating || 0) >= 3);
+      }
+      if (activeFilters.includes('rating-4')) {
+        result = result.filter(r => (r.rating || 0) >= 4);
+      }
+    }
+
+    return result;
+  }, [restaurants, searchQuery, selectedCategory, activeFilters]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -56,10 +112,17 @@ const Index = () => {
       </section>
 
       {/* Filter Bar */}
-      <FilterBar />
+      <FilterBar
+        activeFilters={activeFilters}
+        onFilterChange={handleFilterChange}
+        onClearFilters={handleClearFilters}
+      />
 
       {/* Category Filter */}
-      <CategoryFilter />
+      <CategoryFilter
+        activeCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
+      />
 
       {/* Restaurants Grid */}
       <section className="py-12 bg-white">
@@ -70,7 +133,7 @@ const Index = () => {
             </div>
           ) : filteredRestaurants.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-gray-600 text-lg">No restaurants found.</p>
+              <p className="text-gray-800 text-2xl font-bold">NOT FOUND</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
