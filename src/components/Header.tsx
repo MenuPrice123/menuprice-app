@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { UtensilsCrossed } from "lucide-react";
 import { CartSheet } from "./CartSheet";
+import { InstallPrompt } from "./InstallPrompt";
 
 export const Header = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -54,6 +55,26 @@ export const Header = () => {
                   Log out
                 </button>
               </>
+            <span className="text-xl sm:text-2xl font-bold gradient-text">
+              MenuPrice
+            </span>
+          </div>
+
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center gap-6">
+            <button onClick={() => scrollToSection("hero")}>Home</button>
+            <button onClick={() => scrollToSection("restaurants")}>Restaurants</button>
+            <button onClick={() => scrollToSection("about")}>About</button>
+            <InstallPrompt />
+            <CartSheet />
+
+            {!isAuthenticated ? (
+              <button
+                onClick={() => navigate("/login")}
+                className="px-6 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg font-semibold"
+              >
+                Sign In
+              </button>
             ) : (
               <>
                 <button
@@ -70,6 +91,16 @@ export const Header = () => {
                 </button>
               </>
             )}
+          </div>
+
+          <div className="flex items-center gap-4 md:hidden">
+            <InstallPrompt />
+            <CartSheet />
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X /> : <Menu />}
+            </button>
           </div>
         </div>
       </nav>
