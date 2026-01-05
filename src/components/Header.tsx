@@ -1,17 +1,14 @@
-// Header.tsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { ChefHat, Menu, X } from "lucide-react";
+import { UtensilsCrossed } from "lucide-react";
 import { CartSheet } from "./CartSheet";
 import { InstallPrompt } from "./InstallPrompt";
 
 export const Header = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ Check auth session
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setIsAuthenticated(!!data.session);
@@ -26,19 +23,13 @@ export const Header = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) element.scrollIntoView({ behavior: "smooth" });
-    setMobileMenuOpen(false);
-  };
-
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate("/login");
   };
 
   return (
-    <header className="sticky top-0 z-50 glass border-b border-purple-100 shadow-sm animate-slide-down">
+    <header className="header-nav sticky top-0 z-50">
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -46,9 +37,10 @@ export const Header = () => {
             className="flex items-center gap-2 cursor-pointer"
             onClick={() => navigate("/")}
           >
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-800 rounded-lg flex items-center justify-center">
-              <ChefHat className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-lg flex items-center justify-center">
+              <UtensilsCrossed className="w-6 h-6 text-gray-900" />
             </div>
+<<<<<<< HEAD
             <span className="text-xl sm:text-2xl font-bold gradient-text">
               MenuPrice
             </span>
@@ -69,15 +61,41 @@ export const Header = () => {
               >
                 Sign In
               </button>
+=======
+            <span className="text-xl font-bold text-gray-900">Menuprice</span>
+          </div>
+
+          {/* Right Section */}
+          <div className="flex items-center gap-4">
+            {isAuthenticated ? (
+              <>
+                <CartSheet />
+                <button
+                  onClick={handleLogout}
+                  className="btn-secondary text-sm px-4 py-2"
+                >
+                  Log out
+                </button>
+              </>
+>>>>>>> source/main
             ) : (
-              <button
-                onClick={handleLogout}
-                className="px-6 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg font-semibold"
-              >
-                Logout
-              </button>
+              <>
+                <button
+                  onClick={() => navigate("/login")}
+                  className="btn-secondary text-sm px-4 py-2"
+                >
+                  Log in
+                </button>
+                <button
+                  onClick={() => navigate("/signup")}
+                  className="btn-primary text-sm px-4 py-2"
+                >
+                  Sign Up
+                </button>
+              </>
             )}
           </div>
+<<<<<<< HEAD
 
           <div className="flex items-center gap-4 md:hidden">
             <InstallPrompt />
@@ -88,38 +106,9 @@ export const Header = () => {
               {mobileMenuOpen ? <X /> : <Menu />}
             </button>
           </div>
+=======
+>>>>>>> source/main
         </div>
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden mt-4 space-y-3">
-            <button onClick={() => scrollToSection("hero")} className="block w-full text-left">
-              Home
-            </button>
-            <button onClick={() => scrollToSection("restaurants")} className="block w-full text-left">
-              Restaurants
-            </button>
-            <button onClick={() => scrollToSection("about")} className="block w-full text-left">
-              About
-            </button>
-
-            {!isAuthenticated ? (
-              <button
-                onClick={() => navigate("/login")}
-                className="w-full px-6 py-2 bg-purple-600 text-white rounded-lg"
-              >
-                Sign In
-              </button>
-            ) : (
-              <button
-                onClick={handleLogout}
-                className="w-full px-6 py-2 bg-purple-600 text-white rounded-lg"
-              >
-                Logout
-              </button>
-            )}
-          </div>
-        )}
       </nav>
     </header>
   );
