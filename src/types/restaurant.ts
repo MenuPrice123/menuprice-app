@@ -1,3 +1,12 @@
+export interface MenuItem {
+  id: string;
+  name: string;
+  price: number;
+  swiggy_price?: number;
+  photo: string;
+  description?: string; // Added for completeness if needed later, though not in user JSON
+}
+
 export interface Restaurant {
   id: string;
   name: string;
@@ -14,4 +23,5 @@ export interface Restaurant {
   created_at?: string;
   external_url?: string;
   description?: string;
+  menu?: MenuItem[];
 }
