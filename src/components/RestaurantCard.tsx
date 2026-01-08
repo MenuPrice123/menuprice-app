@@ -20,6 +20,7 @@ interface RestaurantCardProps {
 export const RestaurantCard = ({
   id,
   name,
+  slug,
   cuisinePrimary,
   coverImage,
   externalUrl,
@@ -73,8 +74,8 @@ export const RestaurantCard = ({
             <Star
               key={star}
               className={`w-4 h-4 ${parseFloat(rating) >= star
-                  ? 'star fill-current'
-                  : 'text-gray-300'
+                ? 'star fill-current'
+                : 'text-gray-300'
                 }`}
             />
           ))}
@@ -97,7 +98,7 @@ export const RestaurantCard = ({
   }
 
   return (
-    <Link to={`/restaurant/${id}`}>
+    <Link to={`/restaurant/${slug || id}`}>
       <CardContent />
     </Link>
   );

@@ -1,90 +1,92 @@
-import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { ArrowLeft, Star, MapPin } from "lucide-react";
+import { MOCK_RESTAURANTS } from "@/data/mockData";
 import { Header } from "@/components/Header";
-import { MOCK_RESTAURANTS, MOCK_MENU_ITEMS } from "@/data/mockData";
-import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
-import { Loader2, Plus, Star, MapPin, Clock } from "lucide-react";
-import { Restaurant } from "@/types/restaurant";
+
+import { useCart } from "@/context/CartContext";
 
 const RestaurantDetails = () => {
-    const { id } = useParams();
+    const { slug } = useParams();
     const { addToCart } = useCart();
-
-    const { data: restaurant, isLoading } = useQuery<Restaurant>({
-        queryKey: ["restaurant", id],
-        queryFn: async () => {
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            const found = MOCK_RESTAURANTS.find(r => r.id === id);
-            if (!found) throw new Error("Restaurant not found");
-            return found;
-        },
-        enabled: !!id,
-    });
-
-    const menuItems = MOCK_MENU_ITEMS;
-    const rating = restaurant ? (4.0 + Math.random() * 1).toFixed(1) : "4.5";
-    const deliveryTime = Math.floor(25 + Math.random() * 15);
-
-    if (isLoading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <Loader2 className="w-12 h-12 animate-spin text-yellow-500" />
-            </div>
-        );
-    }
+    const [addedItems, setAddedItems] = useState<Record<string, boolean>>({});
+    const restaurant = MOCK_RESTAURANTS.find((r) => r.slug === slug || r.id === slug);
 
     if (!restaurant) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <p className="text-gray-600">Restaurant not found.</p>
+            <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
+                <h1 className="text-2xl font-bold text-gray-800 mb-4">Restaurant Not Found</h1>
+                <Link to="/">
+                    <Button>Back to Home</Button>
+                </Link>
             </div>
         );
     }
+
+    const handleAddToCart = (item: any) => {
+        addToCart(item);
+        setAddedItems(prev => ({ ...prev, [item.id]: true }));
+
+        // Reset feedback after 1.5s
+        setTimeout(() => {
+            setAddedItems(prev => ({ ...prev, [item.id]: false }));
+        }, 1500);
+    };
 
     return (
         <div className="min-h-screen bg-gray-50">
             <Header />
 
-            {/* Restaurant Header */}
+            {/* Hero Section */}
             <div className="bg-white border-b">
                 <div className="container mx-auto px-4 py-8">
-                    <div className="flex items-start gap-6">
-                        <img
-                            src={restaurant.cover_image}
-                            alt={restaurant.name}
-                            className="w-32 h-32 rounded-lg object-cover shadow-lg"
-                        />
+                    <Link to="/" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6 transition-colors">
+                        <ArrowLeft className="w-4 h-4 mr-2" />
+                        Back to Restaurants
+                    </Link>
+
+                    <div className="flex flex-col md:flex-row gap-8 items-start">
+                        <div className="w-full md:w-1/3 rounded-xl overflow-hidden shadow-md">
+                            <img
+                                src={restaurant.cover_image}
+                                alt={restaurant.name}
+                                className="w-full h-64 object-cover"
+                            />
+                        </div>
+
                         <div className="flex-1">
-                            <h1 className="text-4xl font-bold text-gray-900 mb-2">{restaurant.name}</h1>
-                            <p className="text-lg text-gray-600 mb-4">{restaurant.cuisine_primary} • {restaurant.type}</p>
-
-                            <div className="flex flex-wrap items-center gap-6 text-sm">
-                                <div className="flex items-center gap-2">
-                                    <div className="flex items-center gap-1">
-                                        {[1, 2, 3, 4, 5].map((star) => (
-                                            <Star
-                                                key={star}
-                                                className={`w-5 h-5 ${parseFloat(rating) >= star
-                                                        ? 'star fill-current'
-                                                        : 'text-gray-300'
-                                                    }`}
-                                            />
-                                        ))}
-                                    </div>
-                                    <span className="font-semibold text-gray-900">{rating}</span>
+                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+                                <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
+                                    {restaurant.name}
+                                </h1>
+                                <div className="flex items-center gap-2 bg-green-50 px-3 py-1 rounded-full border border-green-100">
+                                    <Star className="w-5 h-5 text-green-600 fill-current" />
+                                    <span className="font-bold text-green-700">{restaurant.rating}</span>
                                 </div>
+                            </div>
 
-                                <div className="flex items-center gap-2 text-gray-600">
-                                    <Clock className="w-5 h-5" />
-                                    <span>{deliveryTime} mins</span>
-                                </div>
-
-                                <div className="flex items-center gap-2 text-gray-600">
-                                    <MapPin className="w-5 h-5" />
-                                    <span>{restaurant.address}</span>
-                                </div>
+                            <div className="space-y-2 text-gray-600 mb-6">
+                                <p className="flex items-center gap-2">
+                                    <span className="inline-block px-2 py-1 bg-gray-100 rounded text-xs font-medium uppercase tracking-wide text-gray-600">
+                                        {restaurant.cuisine_primary}
+                                    </span>
+                                    <span className="text-gray-400">•</span>
+                                    <span>{restaurant.price_range}</span>
+                                    <span className="text-gray-400">•</span>
+                                    <span className={restaurant.is_veg ? "text-green-600 font-medium" : "text-red-600 font-medium"}>
+                                        {restaurant.is_veg ? "Pure Veg" : "Non-Veg"}
+                                    </span>
+                                </p>
+                                <p className="flex items-center gap-2">
+                                    <MapPin className="w-4 h-4" />
+                                    {restaurant.address}
+                                </p>
+                                {restaurant.description && (
+                                    <p className="text-sm text-gray-500 max-w-2xl mt-4">
+                                        {restaurant.description}
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -92,55 +94,74 @@ const RestaurantDetails = () => {
             </div>
 
             {/* Menu Section */}
-            <div className="container mx-auto px-4 py-12">
-                <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-3xl font-bold text-gray-900">Menu</h2>
-                    <span className="text-gray-600">{menuItems.length} items</span>
-                </div>
+            <div className="container mx-auto px-4 py-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Menu</h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {menuItems.map((item) => (
-                        <div key={item.id} className="menu-item-card">
-                            <div className="relative">
-                                <img
-                                    src={item.image}
-                                    alt={item.name}
-                                    className="menu-item-image"
-                                />
-                                {item.is_veg ? (
-                                    <div className="absolute top-3 left-3 px-3 py-1.5 rounded-lg bg-green-500 text-white text-xs font-bold">
-                                        VEG
-                                    </div>
-                                ) : (
-                                    <div className="absolute top-3 left-3 px-3 py-1.5 rounded-lg bg-red-500 text-white text-xs font-bold">
-                                        NON-VEG
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="p-5">
-                                <div className="flex justify-between items-start mb-3">
-                                    <h3 className="font-bold text-lg text-gray-900 flex-1">
-                                        {item.name}
-                                    </h3>
-                                    <span className="price-badge ml-4">₹{item.price}</span>
+                {!restaurant.menu || restaurant.menu.length === 0 ? (
+                    <div className="text-center py-12 bg-white rounded-lg shadow-sm">
+                        <p className="text-gray-500 text-lg">Menu not listed yet.</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {restaurant.menu.map((item, index) => (
+                            <div key={index} className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col md:flex-row h-full">
+                                <div className="md:w-1/3 h-48 md:h-auto relative">
+                                    <img
+                                        src={item.photo}
+                                        alt={item.name}
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80'; // Fallback
+                                        }}
+                                    />
+                                    {item.price && (
+                                        <div className="absolute bottom-2 left-2 bg-black/60 text-white px-2 py-1 rounded text-sm font-bold backdrop-blur-sm">
+                                            ₹{item.price}
+                                        </div>
+                                    )}
                                 </div>
-
-                                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                                    {item.description}
-                                </p>
-
-                                <Button
-                                    variant="outline"
-                                    onClick={() => addToCart(item)}
-                                    className="w-full bg-yellow-400 hover:bg-yellow-500 border-yellow-400 text-gray-900 font-semibold py-6"
-                                >
-                                    <Plus className="w-4 h-4 mr-2" /> Add to Cart
-                                </Button>
+                                <div className="p-4 flex-1 flex flex-col justify-between">
+                                    <div>
+                                        <h3 className="font-bold text-gray-800 text-lg mb-1">{item.name}</h3>
+                                        {item.description && (
+                                            <p className="text-sm text-gray-500 mb-2 line-clamp-2">{item.description}</p>
+                                        )}
+                                        <span className="inline-block px-2 py-1 bg-gray-50 text-gray-500 text-xs rounded border border-gray-200">
+                                            {restaurant.cuisine_primary}
+                                        </span>
+                                    </div>
+                                    <div className="mt-4 pt-4 border-t border-dashed flex flex-col gap-2">
+                                        <div className="flex justify-between items-end">
+                                            <div>
+                                                {item.swiggy_price && (
+                                                    <div className="text-xs text-gray-500 line-through mb-1">
+                                                        Swiggy: ₹{item.swiggy_price}
+                                                    </div>
+                                                )}
+                                                <div className="flex items-center gap-2">
+                                                    <span className="font-bold text-gray-900 text-lg">₹{item.price}</span>
+                                                    {item.swiggy_price && item.price < item.swiggy_price && (
+                                                        <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-100">
+                                                            Save ₹{item.swiggy_price - item.price}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <Button
+                                                size="sm"
+                                                variant={addedItems[item.id] ? "default" : "outline"}
+                                                className={addedItems[item.id] ? "bg-green-600 hover:bg-green-700" : "border-green-600 text-green-600 hover:bg-green-50"}
+                                                onClick={() => handleAddToCart(item)}
+                                            >
+                                                {addedItems[item.id] ? "Added!" : "Add +"}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );
