@@ -1,16 +1,15 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Star, MapPin } from "lucide-react";
+import { ArrowLeft, Star, MapPin, Plus, Minus } from "lucide-react";
 import { MOCK_RESTAURANTS } from "@/data/mockData";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
-
+import { FloatingCartBar } from "@/components/FloatingCartBar";
 import { useCart } from "@/context/CartContext";
 
 const RestaurantDetails = () => {
     const { slug } = useParams();
-    const { addToCart } = useCart();
-    const [addedItems, setAddedItems] = useState<Record<string, boolean>>({});
+    const { addToCart, items: cartItems, updateQuantity, removeFromCart } = useCart();
     const restaurant = MOCK_RESTAURANTS.find((r) => r.slug === slug || r.id === slug);
 
     if (!restaurant) {
@@ -24,18 +23,31 @@ const RestaurantDetails = () => {
         );
     }
 
-    const handleAddToCart = (item: any) => {
-        addToCart(item);
-        setAddedItems(prev => ({ ...prev, [item.id]: true }));
+    const getItemQuantity = (itemId: string) => {
+        const item = cartItems.find(i => i.id === itemId);
+        return item ? item.quantity : 0;
+    };
 
-        // Reset feedback after 1.5s
-        setTimeout(() => {
-            setAddedItems(prev => ({ ...prev, [item.id]: false }));
-        }, 1500);
+    const handleIncrement = (item: any) => {
+        const quantity = getItemQuantity(item.id);
+        if (quantity === 0) {
+            addToCart(item);
+        } else {
+            updateQuantity(item.id, 1);
+        }
+    };
+
+    const handleDecrement = (itemId: string) => {
+        const quantity = getItemQuantity(itemId);
+        if (quantity === 1) {
+            removeFromCart(itemId);
+        } else if (quantity > 1) {
+            updateQuantity(itemId, -1);
+        }
     };
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-50 pb-20">
             <Header />
 
             {/* Hero Section */}
@@ -103,66 +115,94 @@ const RestaurantDetails = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {restaurant.menu.map((item, index) => (
-                            <div key={index} className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col md:flex-row h-full">
-                                <div className="md:w-1/3 h-48 md:h-auto relative">
-                                    <img
-                                        src={item.photo}
-                                        alt={item.name}
-                                        className="w-full h-full object-cover"
-                                        onError={(e) => {
-                                            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80'; // Fallback
-                                        }}
-                                    />
-                                    {item.price && (
-                                        <div className="absolute bottom-2 left-2 bg-black/60 text-white px-2 py-1 rounded text-sm font-bold backdrop-blur-sm">
-                                            ₹{item.price}
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="p-4 flex-1 flex flex-col justify-between">
-                                    <div>
-                                        <h3 className="font-bold text-gray-800 text-lg mb-1">{item.name}</h3>
-                                        {item.description && (
-                                            <p className="text-sm text-gray-500 mb-2 line-clamp-2">{item.description}</p>
-                                        )}
-                                        <span className="inline-block px-2 py-1 bg-gray-50 text-gray-500 text-xs rounded border border-gray-200">
-                                            {restaurant.cuisine_primary}
-                                        </span>
-                                    </div>
-                                    <div className="mt-4 pt-4 border-t border-dashed flex flex-col gap-2">
-                                        <div className="flex justify-between items-end">
-                                            <div>
-                                                {item.swiggy_price && (
-                                                    <div className="text-xs text-gray-500 line-through mb-1">
-                                                        Swiggy: ₹{item.swiggy_price}
-                                                    </div>
-                                                )}
-                                                <div className="flex items-center gap-2">
-                                                    <span className="font-bold text-gray-900 text-lg">₹{item.price}</span>
-                                                    {item.swiggy_price && item.price < item.swiggy_price && (
-                                                        <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-100">
-                                                            Save ₹{item.swiggy_price - item.price}
-                                                        </span>
-                                                    )}
-                                                </div>
+                        {restaurant.menu.map((item, index) => {
+                            const quantity = getItemQuantity(item.id);
+
+                            return (
+                                <div key={index} className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col md:flex-row h-full">
+                                    <div className="md:w-1/3 h-48 md:h-auto relative">
+                                        <img
+                                            src={item.photo}
+                                            alt={item.name}
+                                            className="w-full h-full object-cover"
+                                            onError={(e) => {
+                                                (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80'; // Fallback
+                                            }}
+                                        />
+                                        {item.price && (
+                                            <div className="absolute bottom-2 left-2 bg-black/60 text-white px-2 py-1 rounded text-sm font-bold backdrop-blur-sm">
+                                                ₹{item.price}
                                             </div>
-                                            <Button
-                                                size="sm"
-                                                variant={addedItems[item.id] ? "default" : "outline"}
-                                                className={addedItems[item.id] ? "bg-green-600 hover:bg-green-700" : "border-green-600 text-green-600 hover:bg-green-50"}
-                                                onClick={() => handleAddToCart(item)}
-                                            >
-                                                {addedItems[item.id] ? "Added!" : "Add +"}
-                                            </Button>
+                                        )}
+                                    </div>
+                                    <div className="p-4 flex-1 flex flex-col justify-between">
+                                        <div>
+                                            <h3 className="font-bold text-gray-800 text-lg mb-1">{item.name}</h3>
+                                            {item.description && (
+                                                <p className="text-sm text-gray-500 mb-2 line-clamp-2">{item.description}</p>
+                                            )}
+                                            <span className="inline-block px-2 py-1 bg-gray-50 text-gray-500 text-xs rounded border border-gray-200">
+                                                {restaurant.cuisine_primary}
+                                            </span>
+                                        </div>
+                                        <div className="mt-4 pt-4 border-t border-dashed flex flex-col gap-2">
+                                            <div className="flex justify-between items-end">
+                                                <div>
+                                                    {item.swiggy_price && (
+                                                        <div className="text-xs text-gray-500 line-through mb-1">
+                                                            ₹{item.swiggy_price}
+                                                        </div>
+                                                    )}
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="font-bold text-gray-900 text-lg">₹{item.price}</span>
+                                                        {item.swiggy_price && item.price < item.swiggy_price && (
+                                                            <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-100">
+                                                                Save ₹{item.swiggy_price - item.price}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                {/* Quantity Controls or Add Button */}
+                                                {quantity > 0 ? (
+                                                    <div className="flex items-center gap-3 bg-white border border-green-600 rounded-md px-2 py-1">
+                                                        <button
+                                                            onClick={() => handleDecrement(item.id)}
+                                                            className="text-green-700 hover:text-green-800 transition-colors p-1"
+                                                            aria-label="Decrease quantity"
+                                                        >
+                                                            <Minus size={16} strokeWidth={3} />
+                                                        </button>
+                                                        <span className="font-bold text-green-700 w-4 text-center">{quantity}</span>
+                                                        <button
+                                                            onClick={() => handleIncrement(item)}
+                                                            className="text-green-700 hover:text-green-800 transition-colors p-1"
+                                                            aria-label="Increase quantity"
+                                                        >
+                                                            <Plus size={16} strokeWidth={3} />
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="border-green-600 text-green-600 hover:bg-green-50"
+                                                        onClick={() => handleIncrement(item)}
+                                                    >
+                                                        Add +
+                                                    </Button>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
             </div>
+
+            <FloatingCartBar />
         </div>
     );
 };

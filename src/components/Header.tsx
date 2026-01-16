@@ -29,7 +29,7 @@ export const Header = () => {
     navigate("/login");
   };
 
-  const scrollToSection = (id) => {
+  const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -53,10 +53,10 @@ export const Header = () => {
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-6">
             <button onClick={() => scrollToSection("hero")}>Home</button>
-            <button onClick={() => scrollToSection("restaurants")}>
+            <button onClick={() => scrollToSection("trending-restaurants")}>
               Restaurants
             </button>
-            <button onClick={() => scrollToSection("about")}>About</button>
+            <button onClick={() => window.open("/admin/login", "_blank")}>Admin</button>
 
             <InstallPrompt />
             <CartSheet />

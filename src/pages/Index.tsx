@@ -6,6 +6,8 @@ import { Header } from "@/components/Header";
 import { SearchBar } from "@/components/SearchBar";
 import { FilterBar } from "@/components/FilterBar";
 import { CategoryFilter } from "@/components/CategoryFilter";
+import { ServiceTypeGrid } from "@/components/ServiceTypeGrid";
+import { TrendingSection } from "@/components/TrendingSection";
 import { RestaurantCard } from "@/components/RestaurantCard";
 import { Loader2 } from "lucide-react";
 import type { Restaurant } from "@/types/restaurant";
@@ -100,6 +102,12 @@ const Index = () => {
     return result;
   }, [restaurants, searchQuery, selectedCategory, activeFilters]);
 
+  // Derived state for trending restaurants
+  const trendingRestaurants = useMemo(() => {
+    if (!restaurants) return [];
+    return restaurants.filter(r => r.is_trending);
+  }, [restaurants]);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -117,6 +125,14 @@ const Index = () => {
         onFilterChange={handleFilterChange}
         onClearFilters={handleClearFilters}
       />
+
+      {/* Service Type Grid */}
+      <ServiceTypeGrid />
+
+      {/* Trending Restaurants */}
+      {trendingRestaurants.length > 0 && (
+        <TrendingSection restaurants={trendingRestaurants} />
+      )}
 
       {/* Category Filter */}
       <CategoryFilter
@@ -152,6 +168,8 @@ const Index = () => {
                   isVerified={restaurant.is_verified}
                   externalUrl={restaurant.external_url}
                   description={restaurant.description}
+                  rating={restaurant.rating}
+                  isVeg={restaurant.is_veg}
                 />
               ))}
             </div>
