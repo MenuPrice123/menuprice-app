@@ -1,5 +1,4 @@
 import { Pizza, Beef, Fish, Coffee, Salad, IceCream, Soup, Cookie } from "lucide-react";
-import { useState } from "react";
 
 interface CategoryFilterProps {
     activeCategory: string | null;

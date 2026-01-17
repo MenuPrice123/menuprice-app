@@ -1,108 +1,133 @@
 
-import { Users, Store, Utensils, TrendingUp } from "lucide-react";
+import { Users, Store, Utensils, TrendingUp, DollarSign, Activity } from "lucide-react";
 
 export const AdminDashboard = () => {
     const stats = [
-        { label: "Total Restaurants", value: "12", icon: Store, change: "+2 this week", color: "blue" },
-        { label: "Menu Items", value: "1,248", icon: Utensils, change: "+156 new items", color: "green" },
-        { label: "Active Users", value: "8.5k", icon: Users, change: "+12% vs last month", color: "purple" },
-        { label: "Avg Savings", value: "18%", icon: TrendingUp, change: "Consistent", color: "orange" },
+        { label: "Total Restaurants", value: "12", icon: Store, change: "+2 this week", color: "blue", bg: "bg-blue-50", text: "text-blue-600" },
+        { label: "Menu Items", value: "1,248", icon: Utensils, change: "+156 new items", color: "green", bg: "bg-green-50", text: "text-green-600" },
+        { label: "Active Users", value: "8.5k", icon: Users, change: "+12% vs last month", color: "purple", bg: "bg-purple-50", text: "text-purple-600" },
+        { label: "Total Revenue", value: "₹4.2L", icon: DollarSign, change: "+18% growth", color: "yellow", bg: "bg-yellow-50", text: "text-yellow-600" },
     ];
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-8">
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {stats.map((stat, index) => (
-                    <div key={index} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <div key={index} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow group">
                         <div className="flex justify-between items-start">
                             <div>
                                 <p className="text-sm font-medium text-gray-500">{stat.label}</p>
-                                <h3 className="text-2xl font-bold text-gray-900 mt-2">{stat.value}</h3>
+                                <h3 className="text-3xl font-bold text-gray-900 mt-2 tracking-tight">{stat.value}</h3>
                             </div>
-                            <div className={`p-3 rounded-lg bg-${stat.color}-50 text-${stat.color}-600`}>
-                                <stat.icon className="w-5 h-5" />
+                            <div className={`p-3 rounded-xl ${stat.bg} ${stat.text} group-hover:scale-110 transition-transform`}>
+                                <stat.icon className="w-6 h-6" />
                             </div>
                         </div>
-                        <p className="text-xs text-gray-500 mt-4">{stat.change}</p>
+                        <div className="flex items-center mt-4 text-sm">
+                            <TrendingUp className="w-4 h-4 text-green-500 mr-1" />
+                            <span className="text-green-600 font-medium">{stat.change}</span>
+                        </div>
                     </div>
                 ))}
             </div>
 
             {/* Charts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Sales by Restaurant Chart */}
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-900 mb-6">Sales by Restaurant</h3>
-                    {/* Removed items-end to allow columns to stretch full height */}
-                    <div className="flex space-x-4 h-64">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Sales by Restaurant Chart - Takes up 2 columns */}
+                <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <div className="flex items-center justify-between mb-8">
+                        <h3 className="text-lg font-bold text-gray-900">Weekly Performance</h3>
+                        <select className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block p-2">
+                            <option>Last 7 Days</option>
+                            <option>Last 30 Days</option>
+                        </select>
+                    </div>
+
+                    <div className="flex items-end space-x-6 h-72 pb-2">
                         {[
-                            { label: "Varalakshmi", value: 85, color: "#3B82F6" }, // blue-500
-                            { label: "Pista House", value: 65, color: "#60A5FA" }, // blue-400
-                            { label: "Bawarchi", value: 92, color: "#2563EB" },    // blue-600
-                            { label: "Mehfil", value: 45, color: "#93C5FD" },    // blue-300
-                            { label: "Cream Stone", value: 30, color: "#BFDBFE" }, // blue-200
+                            { label: "Mon", value: 45, color: "bg-gray-200" },
+                            { label: "Tue", value: 65, color: "bg-gray-200" },
+                            { label: "Wed", value: 92, color: "bg-yellow-400" },
+                            { label: "Thu", value: 45, color: "bg-gray-200" },
+                            { label: "Fri", value: 78, color: "bg-gray-300" },
+                            { label: "Sat", value: 85, color: "bg-gray-800" },
+                            { label: "Sun", value: 60, color: "bg-gray-300" },
                         ].map((item, i) => (
-                            <div key={i} className="flex-1 flex flex-col items-center group">
-                                {/* Flex-1 to take available space, items-end to push bar down */}
+                            <div key={i} className="flex-1 flex flex-col items-center group cursor-pointer">
                                 <div className="relative w-full flex-1 flex items-end justify-center">
                                     <div
-                                        className="w-full max-w-[40px] rounded-t-lg transition-all duration-500 group-hover:opacity-80"
-                                        style={{ height: `${item.value}%`, backgroundColor: item.color }}
+                                        className={`w-full max-w-[48px] rounded-t-xl transition-all duration-500 group-hover:opacity-80 ${item.color}`}
+                                        style={{ height: `${item.value}%` }}
                                     >
-                                        <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded pointer-events-none transition-opacity z-10">
+                                        <div className="opacity-0 group-hover:opacity-100 absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs font-bold py-1.5 px-3 rounded-lg pointer-events-none transition-opacity z-10 shadow-lg">
                                             {item.value}%
                                         </div>
                                     </div>
                                 </div>
-                                <p className="text-xs text-gray-500 mt-2 truncate w-full text-center">{item.label}</p>
+                                <p className="text-xs font-semibold text-gray-400 mt-3">{item.label}</p>
                             </div>
                         ))}
                     </div>
                 </div>
 
-                {/* Customer Services Chart */}
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-900 mb-6">Customer Services</h3>
-                    <div className="flex space-x-4 h-64">
-                        {[
-                            { label: "Dine-in", value: 40, color: "#22C55E" },   // green-500
-                            { label: "Takeaway", value: 75, color: "#16A34A" },  // green-600
-                            { label: "Delivery", value: 60, color: "#4ADE80" },  // green-400
-                            { label: "Catering", value: 25, color: "#86EFAC" },  // green-300
-                        ].map((item, i) => (
-                            <div key={i} className="flex-1 flex flex-col items-center group">
-                                <div className="relative w-full flex-1 flex items-end justify-center">
-                                    <div
-                                        className="w-full max-w-[60px] rounded-t-lg transition-all duration-500 group-hover:opacity-80"
-                                        style={{ height: `${item.value}%`, backgroundColor: item.color }}
-                                    >
-                                        <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded pointer-events-none transition-opacity z-10">
-                                            {item.value}%
-                                        </div>
-                                    </div>
+                {/* Recent Activity Feed */}
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col">
+                    <h3 className="text-lg font-bold text-gray-900 mb-6">Recent Activity</h3>
+                    <div className="flex-1 overflow-y-auto pr-2 space-y-6">
+                        {[1, 2, 3, 4, 5].map((_, i) => (
+                            <div key={i} className="flex gap-4 group">
+                                <div className="flex flex-col items-center">
+                                    <div className="w-2 h-2 rounded-full bg-yellow-500 ring-4 ring-yellow-50 group-hover:bg-yellow-600 transition-colors"></div>
+                                    {i !== 4 && <div className="w-0.5 bg-gray-100 h-full mt-2"></div>}
                                 </div>
-                                <p className="text-xs text-gray-500 mt-2 font-medium">{item.label}</p>
+                                <div className="pb-2">
+                                    <p className="text-sm text-gray-600 leading-relaxed">
+                                        <span className="font-bold text-gray-900">Admin User</span> updated menu prices for
+                                        <span className="font-bold text-gray-900"> Paradise Biryani</span>
+                                    </p>
+                                    <span className="text-xs font-medium text-gray-400 mt-1 block">2 hours ago</span>
+                                </div>
                             </div>
                         ))}
                     </div>
                 </div>
             </div>
 
-            {/* Recent Activity Placeholder */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Recent Activity</h3>
-                <div className="space-y-4">
-                    {[1, 2, 3].map((_, i) => (
-                        <div key={i} className="flex items-center p-4 bg-gray-50 rounded-lg">
-                            <div className="w-2 h-2 rounded-full bg-blue-500 mr-4"></div>
-                            <p className="text-sm text-gray-600">
-                                <span className="font-medium text-gray-900">Admin User</span> updated prices for
-                                <span className="font-medium text-gray-900"> Varalakshmi Tiffins</span>
-                            </p>
-                            <span className="ml-auto text-xs text-gray-400">2 hours ago</span>
+            {/* Quick Stats Row */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 text-white relative overflow-hidden">
+                    <div className="relative z-10">
+                        <h4 className="text-gray-400 text-sm font-medium mb-1">System Health</h4>
+                        <div className="flex items-end gap-2">
+                            <h2 className="text-3xl font-bold">99.8%</h2>
+                            <span className="text-green-400 text-sm font-semibold mb-1">Operational</span>
                         </div>
-                    ))}
+                        <div className="mt-4 w-full bg-gray-700 h-1.5 rounded-full overflow-hidden">
+                            <div className="bg-green-500 w-[99%] h-full"></div>
+                        </div>
+                    </div>
+                    <Activity className="absolute right-4 bottom-4 w-24 h-24 text-white opacity-5" />
+                </div>
+
+                <div className="bg-white border border-gray-100 rounded-2xl p-6 flex items-center justify-between">
+                    <div>
+                        <p className="text-sm font-medium text-gray-500">Pending Approvals</p>
+                        <h2 className="text-3xl font-bold text-gray-900 mt-1">24</h2>
+                    </div>
+                    <button className="px-4 py-2 bg-yellow-50 text-yellow-700 font-bold rounded-lg text-sm hover:bg-yellow-100 transition-colors">
+                        Review
+                    </button>
+                </div>
+
+                <div className="bg-white border border-gray-100 rounded-2xl p-6 flex items-center justify-between">
+                    <div>
+                        <p className="text-sm font-medium text-gray-500">Support Tickets</p>
+                        <h2 className="text-3xl font-bold text-gray-900 mt-1">5</h2>
+                    </div>
+                    <button className="px-4 py-2 bg-gray-50 text-gray-700 font-bold rounded-lg text-sm hover:bg-gray-100 transition-colors">
+                        View All
+                    </button>
                 </div>
             </div>
         </div>

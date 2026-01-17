@@ -1,4 +1,3 @@
-
 import { Utensils, ChefHat, Truck, Home } from "lucide-react";
 
 export const ServiceTypeGrid = () => {

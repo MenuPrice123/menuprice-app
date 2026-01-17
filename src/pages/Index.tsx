@@ -9,7 +9,7 @@ import { CategoryFilter } from "@/components/CategoryFilter";
 import { ServiceTypeGrid } from "@/components/ServiceTypeGrid";
 import { TrendingSection } from "@/components/TrendingSection";
 import { RestaurantCard } from "@/components/RestaurantCard";
-import { Loader2 } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
 import type { Restaurant } from "@/types/restaurant";
 import { MOCK_RESTAURANTS } from "@/data/mockData";
 
@@ -112,10 +112,26 @@ const Index = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      {/* Hero Section with Food Background */}
-      <section className="hero-food-bg flex items-center justify-center py-20">
-        <div className="container mx-auto px-4">
-          <SearchBar value={searchQuery} onChange={setSearchQuery} />
+      {/* Enhanced Hero Section with Food Background */}
+      <section className="hero-food-bg flex items-center justify-center py-24 relative overflow-hidden">
+        {/* Overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50"></div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          {/* Hero Title */}
+          <div className="text-center mb-8 animate-in fade-in slide-in-from-top duration-700">
+            <h1 className="text-5xl md:text-6xl font-black text-white mb-4 drop-shadow-2xl">
+              Find Your Next Meal
+            </h1>
+            <p className="text-xl text-white/90 font-medium drop-shadow-lg">
+              Compare prices, discover deals, save money
+            </p>
+          </div>
+
+          {/* Search Bar */}
+          <div className="animate-in fade-in slide-in-from-bottom duration-700 delay-150">
+            <SearchBar value={searchQuery} onChange={setSearchQuery} />
+          </div>
         </div>
       </section>
 
@@ -141,47 +157,87 @@ const Index = () => {
       />
 
       {/* Restaurants Grid */}
-      <section className="py-12 bg-white">
+      <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
+          {/* Section Header */}
+          <div className="mb-10 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Sparkles className="w-6 h-6 text-yellow-500" />
+              <h2 className="text-3xl font-bold text-gray-900">
+                {searchQuery || selectedCategory || activeFilters.length > 0
+                  ? `${filteredRestaurants.length} ${filteredRestaurants.length === 1 ? 'Restaurant' : 'Restaurants'} Found`
+                  : 'All Restaurants'}
+              </h2>
+            </div>
+            {(searchQuery || selectedCategory || activeFilters.length > 0) && filteredRestaurants.length > 0 && (
+              <span className="text-sm text-gray-500 bg-white px-4 py-2 rounded-full shadow-sm">
+                Showing filtered results
+              </span>
+            )}
+          </div>
+
           {isLoading ? (
-            <div className="flex justify-center py-20">
-              <Loader2 className="w-12 h-12 animate-spin text-yellow-500" />
+            <div className="flex flex-col items-center justify-center py-24">
+              <Loader2 className="w-14 h-14 animate-spin text-yellow-500 mb-4" />
+              <p className="text-gray-500 font-medium">Loading delicious options...</p>
             </div>
           ) : filteredRestaurants.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="text-gray-800 text-2xl font-bold">NOT FOUND</p>
+            <div className="text-center py-24">
+              <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Sparkles className="w-12 h-12 text-gray-400" />
+              </div>
+              <p className="text-gray-800 text-3xl font-bold mb-2">No Restaurants Found</p>
+              <p className="text-gray-500 text-lg mb-8">Try adjusting your search or filters</p>
+              <button
+                onClick={() => {
+                  setSearchQuery("");
+                  setSelectedCategory(null);
+                  setActiveFilters([]);
+                }}
+                className="px-6 py-3 bg-yellow-500 text-white font-semibold rounded-xl hover:bg-yellow-600 transition-colors shadow-lg shadow-yellow-500/30"
+              >
+                Clear All Filters
+              </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredRestaurants.map((restaurant) => (
-                <RestaurantCard
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 animate-in fade-in duration-500">
+              {filteredRestaurants.map((restaurant, index) => (
+                <div
                   key={restaurant.id}
-                  id={restaurant.id}
-                  name={restaurant.name}
-                  slug={restaurant.slug}
-                  type={restaurant.type}
-                  cuisinePrimary={restaurant.cuisine_primary}
-                  priceRange={restaurant.price_range}
-                  coverImage={restaurant.cover_image}
-                  logo={restaurant.logo}
-                  address={restaurant.address}
-                  isVerified={restaurant.is_verified}
-                  externalUrl={restaurant.external_url}
-                  description={restaurant.description}
-                  rating={restaurant.rating}
-                  isVeg={restaurant.is_veg}
-                />
+                  className="animate-in fade-in slide-in-from-bottom duration-500"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <RestaurantCard
+                    id={restaurant.id}
+                    name={restaurant.name}
+                    slug={restaurant.slug}
+                    type={restaurant.type}
+                    cuisinePrimary={restaurant.cuisine_primary}
+                    priceRange={restaurant.price_range}
+                    coverImage={restaurant.cover_image}
+                    logo={restaurant.logo}
+                    address={restaurant.address}
+                    isVerified={restaurant.is_verified}
+                    externalUrl={restaurant.external_url}
+                    description={restaurant.description}
+                    rating={restaurant.rating}
+                    isVeg={restaurant.is_veg}
+                  />
+                </div>
               ))}
             </div>
           )}
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-8 text-center border-t bg-white">
-        <p className="text-gray-600">
-          © {new Date().getFullYear()} MenuPrice — Honest pricing, always
-        </p>
+      {/* Enhanced Footer */}
+      <footer className="py-12 text-center border-t border-gray-200 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <p className="text-gray-600 font-medium text-lg mb-2">
+            © {new Date().getFullYear()} MenuPrice
+          </p>
+          <p className="text-yellow-600 font-semibold">Honest pricing, always.</p>
+        </div>
       </footer>
     </div>
   );
