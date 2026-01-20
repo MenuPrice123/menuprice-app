@@ -23,13 +23,7 @@ export const AdminLayout = () => {
             <aside className="w-72 bg-white border-r border-gray-200 flex flex-col shadow-sm">
                 <div className="p-8 border-b border-gray-100">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-yellow-500 rounded-xl flex items-center justify-center shadow-lg shadow-yellow-500/30">
-                            <UtensilsCrossed className="w-6 h-6 text-white" />
-                        </div>
-                        <div>
-                            <h1 className="text-xl font-bold text-gray-900 leading-none">MenuPrice</h1>
-                            <span className="text-xs font-semibold text-gray-400 tracking-wider uppercase">Admin Portal</span>
-                        </div>
+
                     </div>
                 </div>
 
@@ -41,8 +35,8 @@ export const AdminLayout = () => {
                                 key={item.path}
                                 to={item.path}
                                 className={`group flex items-center justify-between px-4 py-3.5 text-sm font-medium rounded-xl transition-all duration-200 ${active
-                                        ? "bg-gray-900 text-white shadow-md shadow-gray-900/10"
-                                        : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+                                    ? "bg-gray-900 text-white shadow-md shadow-gray-900/10"
+                                    : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
                                     }`}
                             >
                                 <div className="flex items-center gap-3">

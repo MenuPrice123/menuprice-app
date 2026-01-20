@@ -44,17 +44,21 @@ export const AdminDashboard = () => {
                         </select>
                     </div>
 
-                    <div className="flex items-end space-x-6 h-72 pb-2">
+                    <div className="flex items-stretch space-x-6 h-72 pb-2">
                         {[
-                            { label: "Mon", value: 45, color: "bg-gray-200" },
-                            { label: "Tue", value: 65, color: "bg-gray-200" },
-                            { label: "Wed", value: 92, color: "bg-yellow-400" },
-                            { label: "Thu", value: 45, color: "bg-gray-200" },
-                            { label: "Fri", value: 78, color: "bg-gray-300" },
-                            { label: "Sat", value: 85, color: "bg-gray-800" },
-                            { label: "Sun", value: 60, color: "bg-gray-300" },
+                            { label: "Mon", value: 45, color: "bg-blue-500", path: "/admin/dashboard" },
+                            { label: "Tue", value: 65, color: "bg-purple-500", path: "/admin/restaurants" },
+                            { label: "Wed", value: 92, color: "bg-yellow-500", path: "/admin/menu" },
+                            { label: "Thu", value: 45, color: "bg-red-500", path: "/admin/settings" },
+                            { label: "Fri", value: 78, color: "bg-green-500", path: "/admin/menu" },
+                            { label: "Sat", value: 85, color: "bg-indigo-500", path: "/admin/restaurants" },
+                            { label: "Sun", value: 60, color: "bg-pink-500", path: "/admin/dashboard" },
                         ].map((item, i) => (
-                            <div key={i} className="flex-1 flex flex-col items-center group cursor-pointer">
+                            <div
+                                key={i}
+                                className="flex-1 flex flex-col items-center group cursor-pointer"
+                                onClick={() => window.location.href = item.path}
+                            >
                                 <div className="relative w-full flex-1 flex items-end justify-center">
                                     <div
                                         className={`w-full max-w-[48px] rounded-t-xl transition-all duration-500 group-hover:opacity-80 ${item.color}`}
