@@ -4,7 +4,9 @@ export interface MenuItem {
   price: number;
   swiggy_price?: number;
   photo: string;
-  description?: string; // Added for completeness if needed later, though not in user JSON
+  description?: string;
+  category?: string;
+  is_veg?: boolean;
 }
 
 export interface Restaurant {
@@ -25,4 +27,5 @@ export interface Restaurant {
   external_url?: string;
   description?: string;
   menu?: MenuItem[];
+  has_admin_credentials?: boolean;
 }

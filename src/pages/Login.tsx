@@ -20,11 +20,8 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // ✅ Credential validation
-    if (email !== ALLOWED_EMAIL || password !== ALLOWED_PASSWORD) {
-      alert("Invalid login credentials");
-      return;
-    }
+    // Credential validation is handled by Supabase
+    // Removed hardcoded check
 
     setLoading(true);
 

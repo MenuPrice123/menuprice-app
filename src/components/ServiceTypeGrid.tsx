@@ -1,10 +1,14 @@
 import { Utensils, ChefHat, Truck, Home } from "lucide-react";
 
-export const ServiceTypeGrid = () => {
+interface ServiceTypeGridProps {
+    onSelect?: (category: string) => void;
+}
+
+export const ServiceTypeGrid = ({ onSelect }: ServiceTypeGridProps) => {
     const services = [
         {
             id: "restaurants",
-            title: "Restaurants",
+            title: "Restaurant",
             image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&q=80",
             icon: Utensils
         },
@@ -16,17 +20,19 @@ export const ServiceTypeGrid = () => {
         },
         {
             id: "caterings",
-            title: "Caterings",
+            title: "Catering",
             image: "https://images.unsplash.com/photo-1555244162-803834f70033?w=500&q=80",
             icon: Truck
         },
         {
             id: "home-foods",
-            title: "Home foods",
+            title: "Home Foods",
             image: "https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=500&q=80",
             icon: Home
         }
     ];
+
+
 
     return (
         <section className="py-8 bg-white border-b border-gray-100">
@@ -36,7 +42,8 @@ export const ServiceTypeGrid = () => {
                     {services.map((service) => (
                         <div
                             key={service.id}
-                            className="group relative h-40 md:h-48 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all"
+                            onClick={() => onSelect?.(service.title)}
+                            className="group relative h-40 md:h-48 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all active:scale-95"
                         >
                             {/* Background Image */}
                             <div
@@ -59,3 +66,4 @@ export const ServiceTypeGrid = () => {
         </section>
     );
 };
+

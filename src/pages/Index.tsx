@@ -1,7 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
 import { SearchBar } from "@/components/SearchBar";
 import { FilterBar } from "@/components/FilterBar";
@@ -17,13 +16,14 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
+  /* 
+   * Removed auto-redirect to login. 
+   * Home page should be accessible to all users.
+   */
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (!data.session) {
-        navigate("/login");
-      }
-    });
-  }, [navigate]);
+    // Optional: Check session state if needed for other logic, 
+    // but do not redirect.
+  }, []);
 
   const { data: restaurants, isLoading } = useQuery<Restaurant[]>({
     queryKey: ["restaurants"],
@@ -78,9 +78,11 @@ const Index = () => {
         (r) =>
           r.cuisine_primary?.toLowerCase().includes(category) ||
           r.type?.toLowerCase().includes(category)
-        // Note: In a real app we would check menu tags too, assuming they are indexed on the restaurant
-        // or we would join with menu items. For now we use the top level tags.
       );
+    } else if (!searchQuery.trim()) {
+      // Default view: Show only core "Restaurants" if no search or filter is active
+      // This hides Cloud Kitchens, Caterings, etc. from the main list initially
+      result = result.filter(r => r.type === "Restaurant");
     }
 
     // Then apply active filters from FilterBar
@@ -108,6 +110,20 @@ const Index = () => {
     return restaurants.filter(r => r.is_trending);
   }, [restaurants]);
 
+
+  const handleCategorySelect = (category: string | null) => {
+    setSelectedCategory(category);
+    if (category) {
+      setTimeout(() => {
+        document.getElementById('restaurant-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  };
+
+  const handleRestaurantSelect = (restaurant: Restaurant) => {
+    navigate(`/restaurant/${restaurant.slug || restaurant.id}`);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -129,8 +145,13 @@ const Index = () => {
           </div>
 
           {/* Search Bar */}
-          <div className="animate-in fade-in slide-in-from-bottom duration-700 delay-150">
-            <SearchBar value={searchQuery} onChange={setSearchQuery} />
+          <div className="animate-in fade-in slide-in-from-bottom duration-700 delay-150 relative z-50">
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              suggestions={filteredRestaurants}
+              onResultSelect={handleRestaurantSelect}
+            />
           </div>
         </div>
       </section>
@@ -143,7 +164,7 @@ const Index = () => {
       />
 
       {/* Service Type Grid */}
-      <ServiceTypeGrid />
+      <ServiceTypeGrid onSelect={handleCategorySelect} />
 
       {/* Trending Restaurants */}
       {trendingRestaurants.length > 0 && (
@@ -153,11 +174,11 @@ const Index = () => {
       {/* Category Filter */}
       <CategoryFilter
         activeCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
+        onCategoryChange={handleCategorySelect}
       />
 
       {/* Restaurants Grid */}
-      <section className="py-16 bg-gray-50">
+      <section id="restaurant-grid" className="py-16 bg-gray-50 scroll-mt-20">
         <div className="container mx-auto px-4">
           {/* Section Header */}
           <div className="mb-10 flex items-center justify-between">

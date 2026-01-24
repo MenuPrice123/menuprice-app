@@ -26,7 +26,7 @@ export const Header = () => {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate("/login");
+    navigate("/");
   };
 
   const scrollToSection = (id: string) => {
