@@ -1,6 +1,6 @@
-
 import { Restaurant } from "@/types/restaurant";
 import { RestaurantCard } from "./RestaurantCard";
+import { calculatePriceForTwo } from "@/lib/priceUtils";
 
 interface ServiceBlockProps {
     title: string;
@@ -37,6 +37,7 @@ export const ServiceBlock = ({ title, description, items }: ServiceBlockProps) =
                                 description={item.description}
                                 rating={item.rating}
                                 isVeg={item.is_veg}
+                                priceForTwo={calculatePriceForTwo(item.menu || [])}
                             />
                         </div>
                     ))}
@@ -45,3 +46,4 @@ export const ServiceBlock = ({ title, description, items }: ServiceBlockProps) =
         </section>
     );
 };
+

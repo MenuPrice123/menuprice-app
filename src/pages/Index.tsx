@@ -11,6 +11,7 @@ import { RestaurantCard } from "@/components/RestaurantCard";
 import { Loader2, Sparkles } from "lucide-react";
 import type { Restaurant } from "@/types/restaurant";
 import { MOCK_RESTAURANTS } from "@/data/mockData";
+import { calculatePriceForTwo } from "@/lib/priceUtils";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -243,6 +244,7 @@ const Index = () => {
                     description={restaurant.description}
                     rating={restaurant.rating}
                     isVeg={restaurant.is_veg}
+                    priceForTwo={calculatePriceForTwo(restaurant.menu || [])}
                   />
                 </div>
               ))}
