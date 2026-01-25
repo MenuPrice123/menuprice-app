@@ -1,5 +1,6 @@
 import { useCart } from "@/context/CartContext";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Trash2, Plus, Minus } from "lucide-react";
 import { useState } from "react";
@@ -13,47 +14,14 @@ declare global {
 }
 
 export const CartSheet = () => {
-    const { items, removeFromCart, updateQuantity, total, clearCart } = useCart();
+    const { items, removeFromCart, updateQuantity, total } = useCart();
     const [isOpen, setIsOpen] = useState(false);
 
-    // PLACEHOLDER KEY - Replace with user's actual Test Key ID
-    const RAZORPAY_KEY_ID = "rzp_test_placeholder";
+    const navigate = useNavigate();
 
     const handleCheckout = () => {
-        if (items.length === 0) return;
-
-        if (RAZORPAY_KEY_ID === "rzp_test_placeholder") {
-            alert("Please REPLACE 'rzp_test_placeholder' in src/components/CartSheet.tsx with your actual Razorpay Test Key ID to proceed with payment.");
-            return;
-        }
-
-        const options = {
-            key: RAZORPAY_KEY_ID,
-            amount: total * 100, // Amount in paise
-            currency: "INR",
-            name: "Menu Price App",
-            description: "Food Order Payment",
-            handler: function (response: any) {
-                console.log("Payment Success:", response);
-                alert(`Payment Successful! Payment ID: ${response.razorpay_payment_id}`);
-                clearCart();
-                setIsOpen(false);
-            },
-            prefill: {
-                name: "Test User",
-                email: "test@example.com",
-                contact: "9999999999",
-            },
-            theme: {
-                color: "#9333ea", // Purple-600
-            },
-        };
-
-        const rzp1 = new window.Razorpay(options);
-        rzp1.on("payment.failed", function (response: any) {
-            alert(`Payment Failed: ${response.error.description}`);
-        });
-        rzp1.open();
+        setIsOpen(false);
+        navigate('/order-summary');
     };
 
     return (
@@ -84,7 +52,7 @@ export const CartSheet = () => {
                             {items.map((item) => (
                                 <div key={item.id} className="flex items-center gap-4 bg-gray-50 p-3 rounded-lg">
                                     <img
-                                        src={item.image}
+                                        src={item.photo}
                                         alt={item.name}
                                         className="h-16 w-16 object-cover rounded-md"
                                     />
