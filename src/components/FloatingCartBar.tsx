@@ -21,7 +21,7 @@ export const FloatingCartBar = () => {
                     </span>
                 </div>
 
-                <Link to="/cart">
+                <Link to="/order-summary">
                     <Button
                         variant="secondary"
                         size="sm"

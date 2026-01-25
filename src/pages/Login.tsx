@@ -3,8 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate, Link } from "react-router-dom";
 import { Eye, EyeOff, UtensilsCrossed, ArrowRight, Mail, Lock, X } from "lucide-react";
 
-const ALLOWED_EMAIL = "chintalamaheshbabu1005@gmail.com";
-const ALLOWED_PASSWORD = "Mahesh@12";
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -35,7 +34,9 @@ const Login = () => {
     if (error) {
       alert(error.message);
     } else {
-      navigate("/");
+      const searchParams = new URLSearchParams(window.location.search);
+      const redirect = searchParams.get('redirect') || '/';
+      navigate(redirect);
     }
   };
 

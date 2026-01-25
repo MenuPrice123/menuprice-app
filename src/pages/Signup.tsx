@@ -35,7 +35,13 @@ const Signup = () => {
       alert(error.message);
     } else {
       alert("Signup successful! Please login.");
-      navigate("/login");
+      const searchParams = new URLSearchParams(window.location.search);
+      const redirect = searchParams.get('redirect');
+      if (redirect) {
+        navigate(`/login?redirect=${redirect}`);
+      } else {
+        navigate("/login");
+      }
     }
   };
 

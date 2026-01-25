@@ -7,10 +7,26 @@ import { Link, useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 
+import { supabase } from "@/integrations/supabase/client";
+
 const Cart = () => {
     const { items, total, updateQuantity, removeFromCart } = useCart();
     const navigate = useNavigate();
     const [address, setAddress] = useState("");
+
+    const handleCheckout = async (serviceType: string) => {
+        const { data: { session } } = await supabase.auth.getSession();
+        const checkoutState = { serviceType, address: serviceType === 'location' ? address : undefined };
+
+        // Save state to localStorage to persist across auth redirects
+        localStorage.setItem('checkoutState', JSON.stringify(checkoutState));
+
+        if (session) {
+            navigate('/order-summary', { state: checkoutState });
+        } else {
+            navigate('/login?redirect=/order-summary');
+        }
+    };
 
     const itemTotal = total;
     const taxes = Math.round(total * 0.05);
@@ -62,7 +78,7 @@ const Cart = () => {
                                                 <h3 className="font-semibold text-gray-800">{item.name}</h3>
                                                 <span className="font-bold text-gray-900">₹{item.price * item.quantity}</span>
                                             </div>
-                                            <p className="text-sm text-gray-500 mb-3">{item.category}</p>
+
 
                                             <div className="flex items-center gap-3">
                                                 <div className="flex items-center gap-2 border rounded-md px-2 py-1">
@@ -122,8 +138,8 @@ const Cart = () => {
                                         <p className="text-sm text-green-800 font-medium">Safe & Contactless Pickup</p>
                                         <p className="text-xs text-green-600">Pick up your order directly from the restaurant.</p>
                                     </div>
-                                    <Button className="w-full bg-green-600 hover:bg-green-700 h-12 text-lg">
-                                        Proceed to Pay ₹{finalTotal}
+                                    <Button onClick={() => handleCheckout('takeaway')} className="w-full bg-green-600 hover:bg-green-700 h-12 text-lg">
+                                        Proceed to Checkout
                                     </Button>
                                 </TabsContent>
 
@@ -140,8 +156,8 @@ const Cart = () => {
                                             />
                                         </div>
                                     </div>
-                                    <Button className="w-full bg-green-600 hover:bg-green-700 h-12 text-lg">
-                                        Deliver Here & Pay ₹{finalTotal}
+                                    <Button onClick={() => handleCheckout('delivery')} className="w-full bg-green-600 hover:bg-green-700 h-12 text-lg">
+                                        Proceed to Checkout
                                     </Button>
                                 </TabsContent>
 
@@ -151,8 +167,8 @@ const Cart = () => {
                                         <p className="text-sm text-blue-800 font-medium">Dine-in? Book a Ride</p>
                                         <p className="text-xs text-blue-600">Get a ride to the restaurant and your table will be ready.</p>
                                     </div>
-                                    <Button className="w-full bg-blue-600 hover:bg-blue-700 h-12 text-lg">
-                                        Book Ride & Order
+                                    <Button onClick={() => handleCheckout('ride')} className="w-full bg-blue-600 hover:bg-blue-700 h-12 text-lg">
+                                        Proceed to Checkout
                                     </Button>
                                 </TabsContent>
                             </Tabs>

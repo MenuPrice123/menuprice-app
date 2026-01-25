@@ -4,7 +4,8 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import RestaurantDetails from "./pages/RestaurantDetails";
-
+import OrderSummary from "./pages/OrderSummary";
+import Payment from "./pages/Payment";
 import Cart from "./pages/Cart";
 import { AdminLayout } from "./components/layouts/AdminLayout";
 import { AdminDashboard } from "./pages/admin/Dashboard";
@@ -21,6 +22,8 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/cart" element={<Cart />} />
+      <Route path="/order-summary" element={<OrderSummary />} />
+      <Route path="/payment" element={<Payment />} />
       <Route path="/restaurant/:slug" element={<RestaurantDetails />} />
 
       {/* Admin Routes */}
