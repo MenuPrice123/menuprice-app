@@ -58,7 +58,7 @@ export const CartSheet = () => {
                                     />
                                     <div className="flex-1">
                                         <h4 className="font-semibold text-sm line-clamp-1">{item.name}</h4>
-                                        <p className="text-purple-600 font-bold text-sm">₹{item.price}</p>
+                                        <p className="text-purple-600 font-bold text-sm">₹{item.price * item.quantity}</p>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Button
