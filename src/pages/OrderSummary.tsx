@@ -1,3 +1,4 @@
+
 import { useCart } from "@/context/CartContext";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, CreditCard } from "lucide-react";
@@ -7,6 +8,11 @@ import { supabase } from "@/integrations/supabase/client";
 const Checkout = () => {
     const { items, total } = useCart();
     const navigate = useNavigate();
+
+    const originalPriceTotal = items.reduce((acc, item) => acc + ((item.swiggy_price || item.price) * item.quantity), 0);
+    const itemTotal = total;
+    const totalSavings = originalPriceTotal - itemTotal;
+    const gstAmount = itemTotal * 0.05;
 
     const [serviceType, setServiceType] = useState<string>('takeaway');
     const [address, setAddress] = useState<string>('');
@@ -71,15 +77,30 @@ const Checkout = () => {
                                     </div>
                                 </div>
                             ))}
-                            {items.reduce((acc, item) => acc + (item.swiggy_price && item.swiggy_price > item.price ? (item.swiggy_price - item.price) * item.quantity : 0), 0) > 0 && (
-                                <div className="flex justify-between items-center py-2 text-green-600 font-medium border-t border-dashed">
-                                    <span>Total Savings</span>
-                                    <span>-₹{items.reduce((acc, item) => acc + (item.swiggy_price && item.swiggy_price > item.price ? (item.swiggy_price - item.price) * item.quantity : 0), 0).toFixed(2)}</span>
+
+                            <div className="pt-4 space-y-2">
+                                <div className="flex justify-between text-gray-600">
+                                    <span>Original price total</span>
+                                    <span>₹{originalPriceTotal.toFixed(2)}</span>
                                 </div>
-                            )}
-                            <div className="flex justify-between items-center pt-4 text-xl font-bold">
-                                <span>Total</span>
-                                <span>₹{total.toFixed(2)}</span>
+                                <div className="flex justify-between text-gray-600">
+                                    <span>Our site price total</span>
+                                    <span>₹{itemTotal.toFixed(2)}</span>
+                                </div>
+                                {totalSavings > 0 && (
+                                    <div className="flex justify-between text-green-600 font-medium">
+                                        <span>Total Savings</span>
+                                        <span>-₹{totalSavings.toFixed(2)}</span>
+                                    </div>
+                                )}
+                                <div className="flex justify-between text-gray-600 text-sm">
+                                    <span>5% GST (Included of all taxes)</span>
+                                    <span>₹{gstAmount.toFixed(2)}</span>
+                                </div>
+                                <div className="flex justify-between items-center pt-2 text-xl font-bold border-t">
+                                    <span>To Pay</span>
+                                    <span>₹{itemTotal.toFixed(2)}</span>
+                                </div>
                             </div>
                         </div>
 

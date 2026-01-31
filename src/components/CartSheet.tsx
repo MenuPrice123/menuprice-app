@@ -115,7 +115,7 @@ export const CartSheet = () => {
                                 <span>₹{total.toFixed(2)}</span>
                             </div>
                         </div>
-                        <Link to="/order-summary" onClick={() => setIsOpen(false)} className="w-full">
+                        <Link to="/cart" onClick={() => setIsOpen(false)} className="w-full">
                             <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">
                                 Checkout (Razorpay)
                             </Button>
