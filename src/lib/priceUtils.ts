@@ -25,7 +25,16 @@ export function calculatePriceForTwo(menu: MenuItem[]): number {
 
     const priceForTwo = avgPrice * 2;
 
+
     return roundToNearestStandard(priceForTwo);
+}
+
+export function calculateGST(amount: number): number {
+    return amount * 0.05;
+}
+
+export function calculateFinalTotal(amount: number): number {
+    return amount + calculateGST(amount);
 }
 
 function roundToNearestStandard(amount: number): number {

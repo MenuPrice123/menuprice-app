@@ -32,7 +32,7 @@ const Cart = () => {
     const itemTotal = total; // This is "Our site price total"
     const totalSavings = originalPriceTotal - itemTotal;
     const gstAmount = itemTotal * 0.05;
-    const finalTotal = itemTotal; // To Pay is just the item total
+    const finalTotal = itemTotal + gstAmount;
 
     if (items.length === 0) {
         return (
@@ -124,7 +124,7 @@ const Cart = () => {
                                     </div>
                                 )}
                                 <div className="flex justify-between text-gray-600 text-sm">
-                                    <span className="flex items-center gap-1">5% GST (Included of all taxes) <Info className="w-3 h-3 text-gray-400" /></span>
+                                    <span className="flex items-center gap-1">GST (5%) <Info className="w-3 h-3 text-gray-400" /></span>
                                     <span>₹{gstAmount.toFixed(2)}</span>
                                 </div>
                                 <div className="border-t pt-3 mt-3 flex justify-between font-bold text-lg text-gray-900">

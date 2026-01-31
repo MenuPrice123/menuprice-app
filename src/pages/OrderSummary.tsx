@@ -94,12 +94,12 @@ const Checkout = () => {
                                     </div>
                                 )}
                                 <div className="flex justify-between text-gray-600 text-sm">
-                                    <span>5% GST (Included of all taxes)</span>
+                                    <span>GST (5%)</span>
                                     <span>₹{gstAmount.toFixed(2)}</span>
                                 </div>
                                 <div className="flex justify-between items-center pt-2 text-xl font-bold border-t">
                                     <span>To Pay</span>
-                                    <span>₹{itemTotal.toFixed(2)}</span>
+                                    <span>₹{(itemTotal + gstAmount).toFixed(2)}</span>
                                 </div>
                             </div>
                         </div>
