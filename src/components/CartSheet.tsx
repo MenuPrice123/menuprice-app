@@ -1,6 +1,6 @@
 import { useCart } from "@/context/CartContext";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Trash2, Plus, Minus } from "lucide-react";
 import { useState } from "react";
@@ -17,12 +17,7 @@ export const CartSheet = () => {
     const { items, removeFromCart, updateQuantity, total } = useCart();
     const [isOpen, setIsOpen] = useState(false);
 
-    const navigate = useNavigate();
 
-    const handleCheckout = () => {
-        setIsOpen(false);
-        navigate('/order-summary');
-    };
 
     return (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -58,7 +53,19 @@ export const CartSheet = () => {
                                     />
                                     <div className="flex-1">
                                         <h4 className="font-semibold text-sm line-clamp-1">{item.name}</h4>
-                                        <p className="text-purple-600 font-bold text-sm">₹{item.price * item.quantity}</p>
+                                        <div className="flex flex-col">
+                                            <div className="flex items-center gap-2">
+                                                <p className="text-purple-600 font-bold text-sm">₹{item.price * item.quantity}</p>
+                                                {item.swiggy_price && item.swiggy_price > item.price && (
+                                                    <p className="text-xs text-gray-400 line-through">₹{item.swiggy_price * item.quantity}</p>
+                                                )}
+                                            </div>
+                                            {item.swiggy_price && item.swiggy_price > item.price && (
+                                                <p className="text-[10px] font-bold text-green-600">
+                                                    Saved ₹{(item.swiggy_price - item.price) * item.quantity}
+                                                </p>
+                                            )}
+                                        </div>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Button
@@ -96,13 +103,23 @@ export const CartSheet = () => {
 
                 {items.length > 0 && (
                     <div className="border-t pt-4 mt-auto">
-                        <div className="flex justify-between items-center mb-4 text-lg font-bold">
-                            <span>Total</span>
-                            <span>₹{total.toFixed(2)}</span>
+                        <div className="space-y-1 mb-4">
+                            {items.reduce((acc, item) => acc + (item.swiggy_price && item.swiggy_price > item.price ? (item.swiggy_price - item.price) * item.quantity : 0), 0) > 0 && (
+                                <div className="flex justify-between items-center text-green-600 text-sm font-medium">
+                                    <span>Total Savings</span>
+                                    <span>₹{items.reduce((acc, item) => acc + (item.swiggy_price && item.swiggy_price > item.price ? (item.swiggy_price - item.price) * item.quantity : 0), 0).toFixed(2)}</span>
+                                </div>
+                            )}
+                            <div className="flex justify-between items-center text-lg font-bold">
+                                <span>Total</span>
+                                <span>₹{total.toFixed(2)}</span>
+                            </div>
                         </div>
-                        <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white" onClick={handleCheckout}>
-                            Checkout (Razorpay)
-                        </Button>
+                        <Link to="/order-summary" onClick={() => setIsOpen(false)} className="w-full">
+                            <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">
+                                Checkout (Razorpay)
+                            </Button>
+                        </Link>
                     </div>
                 )}
             </SheetContent>

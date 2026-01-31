@@ -61,9 +61,22 @@ const Checkout = () => {
                                         <span className="font-medium text-gray-900">{item.name}</span>
                                         <span className="ml-4 text-gray-500">x{item.quantity}</span>
                                     </div>
-                                    <span className="font-semibold text-gray-900">₹{(item.price * item.quantity).toFixed(2)}</span>
+                                    <div className="text-right">
+                                        <div className="font-semibold text-gray-900">₹{(item.price * item.quantity).toFixed(2)}</div>
+                                        {item.swiggy_price && item.swiggy_price > item.price && (
+                                            <div className="text-xs text-green-600 font-medium">
+                                                Saved ₹{((item.swiggy_price - item.price) * item.quantity).toFixed(2)}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             ))}
+                            {items.reduce((acc, item) => acc + (item.swiggy_price && item.swiggy_price > item.price ? (item.swiggy_price - item.price) * item.quantity : 0), 0) > 0 && (
+                                <div className="flex justify-between items-center py-2 text-green-600 font-medium border-t border-dashed">
+                                    <span>Total Savings</span>
+                                    <span>-₹{items.reduce((acc, item) => acc + (item.swiggy_price && item.swiggy_price > item.price ? (item.swiggy_price - item.price) * item.quantity : 0), 0).toFixed(2)}</span>
+                                </div>
+                            )}
                             <div className="flex justify-between items-center pt-4 text-xl font-bold">
                                 <span>Total</span>
                                 <span>₹{total.toFixed(2)}</span>

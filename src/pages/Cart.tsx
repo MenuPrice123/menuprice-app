@@ -76,7 +76,15 @@ const Cart = () => {
                                         <div className="flex-1">
                                             <div className="flex justify-between items-start mb-2">
                                                 <h3 className="font-semibold text-gray-800">{item.name}</h3>
-                                                <span className="font-bold text-gray-900">₹{item.price * item.quantity}</span>
+                                                <div className="text-right">
+                                                    <div className="font-bold text-gray-900">₹{item.price * item.quantity}</div>
+                                                    {item.swiggy_price && item.swiggy_price > item.price && (
+                                                        <>
+                                                            <div className="text-xs text-gray-400 line-through">₹{item.swiggy_price * item.quantity}</div>
+                                                            <div className="text-xs font-bold text-green-600">Saved ₹{(item.swiggy_price - item.price) * item.quantity}</div>
+                                                        </>
+                                                    )}
+                                                </div>
                                             </div>
 
 
@@ -108,6 +116,12 @@ const Cart = () => {
                                     <span className="flex items-center gap-1">Taxes & Charges <Info className="w-3 h-3 text-gray-400" /></span>
                                     <span>₹{taxes}</span>
                                 </div>
+                                {items.reduce((acc, item) => acc + (item.swiggy_price && item.swiggy_price > item.price ? (item.swiggy_price - item.price) * item.quantity : 0), 0) > 0 && (
+                                    <div className="flex justify-between text-green-600 font-medium">
+                                        <span>Total Savings</span>
+                                        <span>-₹{items.reduce((acc, item) => acc + (item.swiggy_price && item.swiggy_price > item.price ? (item.swiggy_price - item.price) * item.quantity : 0), 0).toFixed(2)}</span>
+                                    </div>
+                                )}
                                 <div className="flex justify-between text-gray-600">
                                     <span>Platform Fee</span>
                                     <span>₹{platformFee}</span>
