@@ -28,10 +28,11 @@ const Cart = () => {
         }
     };
 
-    const itemTotal = total;
-    const taxes = Math.round(total * 0.05);
-    const platformFee = 10;
-    const finalTotal = itemTotal + taxes + platformFee;
+    const originalPriceTotal = items.reduce((acc, item) => acc + ((item.swiggy_price || item.price) * item.quantity), 0);
+    const itemTotal = total; // This is "Our site price total"
+    const totalSavings = originalPriceTotal - itemTotal;
+    const gstAmount = itemTotal * 0.05;
+    const finalTotal = itemTotal; // To Pay is just the item total
 
     if (items.length === 0) {
         return (
@@ -109,26 +110,26 @@ const Cart = () => {
                             </div>
                             <div className="p-4 space-y-3">
                                 <div className="flex justify-between text-gray-600">
-                                    <span>Item Total</span>
-                                    <span>₹{itemTotal}</span>
+                                    <span>Original price total</span>
+                                    <span>₹{originalPriceTotal.toFixed(2)}</span>
                                 </div>
                                 <div className="flex justify-between text-gray-600">
-                                    <span className="flex items-center gap-1">Taxes & Charges <Info className="w-3 h-3 text-gray-400" /></span>
-                                    <span>₹{taxes}</span>
+                                    <span>Our site price total</span>
+                                    <span>₹{itemTotal.toFixed(2)}</span>
                                 </div>
-                                {items.reduce((acc, item) => acc + (item.swiggy_price && item.swiggy_price > item.price ? (item.swiggy_price - item.price) * item.quantity : 0), 0) > 0 && (
+                                {totalSavings > 0 && (
                                     <div className="flex justify-between text-green-600 font-medium">
                                         <span>Total Savings</span>
-                                        <span>-₹{items.reduce((acc, item) => acc + (item.swiggy_price && item.swiggy_price > item.price ? (item.swiggy_price - item.price) * item.quantity : 0), 0).toFixed(2)}</span>
+                                        <span>-₹{totalSavings.toFixed(2)}</span>
                                     </div>
                                 )}
-                                <div className="flex justify-between text-gray-600">
-                                    <span>Platform Fee</span>
-                                    <span>₹{platformFee}</span>
+                                <div className="flex justify-between text-gray-600 text-sm">
+                                    <span className="flex items-center gap-1">5% GST (Included of all taxes) <Info className="w-3 h-3 text-gray-400" /></span>
+                                    <span>₹{gstAmount.toFixed(2)}</span>
                                 </div>
                                 <div className="border-t pt-3 mt-3 flex justify-between font-bold text-lg text-gray-900">
                                     <span>To Pay</span>
-                                    <span>₹{finalTotal}</span>
+                                    <span>₹{finalTotal.toFixed(2)}</span>
                                 </div>
                             </div>
                         </div>
