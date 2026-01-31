@@ -1,5 +1,5 @@
 
-import { Save, Bell, Globe, Shield } from "lucide-react";
+import { Save, Bell, Globe } from "lucide-react";
 
 export const AdminSettings = () => {
     return (

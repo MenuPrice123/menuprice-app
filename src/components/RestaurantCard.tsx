@@ -29,7 +29,6 @@ export const RestaurantCard = ({
   externalUrl,
   description,
   rating,
-  isVeg,
   priceForTwo,
 }: RestaurantCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
