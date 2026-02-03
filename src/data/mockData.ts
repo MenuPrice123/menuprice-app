@@ -77,6 +77,47 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
             { id: "pb-3", name: "Veg Biryani", price: 280, photo: "https://images.unsplash.com/photo-1642821373181-696a54913e93?w=800&q=80", description: "Fresh vegetables cooked with aromatic spices", category: "Biryani" }
         ]
     },
+    {
+        id: "r4",
+        name: "Kshatriya Grand",
+        slug: "kshatriya-grand",
+        type: "Restaurant",
+        cuisine_primary: "South Indian",
+        price_range: "₹₹",
+        cover_image: "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=800&q=80",
+        logo: "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=800&q=80",
+        address: "Kukatpally, Hyderabad",
+        is_verified: true,
+        created_at: new Date().toISOString(),
+        description: "Authentic Godavari Ruchulu. Specializing in Chittimuthyala Pulavs, Spicy Non-Veg Curries and Biryanis.",
+        rating: 4.5,
+        is_veg: false,
+        is_trending: true,
+        has_admin_credentials: false,
+        menu: [
+            // Starters
+            { id: "kg-1", name: "Chilli Paneer", price: 190, photo: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=800&q=80", description: "Spicy cottage cheese toss", category: "Starters" },
+            { id: "kg-2", name: "Chicken 65", price: 220, photo: "https://images.unsplash.com/photo-1610057099431-d8f57d4574eb?w=800&q=80", description: "Spicy deep fried chicken chunks", category: "Starters" },
+            { id: "kg-3", name: "Golden Fried Prawns", price: 300, photo: "https://images.unsplash.com/photo-1559742811-822873691df8?w=800&q=80", description: "Crispy fried prawns", category: "Starters" },
+
+            // Biryanis & Pulaos
+            { id: "kg-4", name: "Special Chicken Fry Piece Biriyani (Boneless)", price: 350, photo: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&q=80", description: "Signature biryani with boneless chicken fry", category: "Biryani" },
+            { id: "kg-5", name: "Prawn Biriyani", price: 400, photo: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&q=80", description: "Flavorful prawn biryani", category: "Biryani" },
+            { id: "kg-6", name: "Chittimuthyala Chicken Fry Piece Pulao", price: 300, photo: "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=800&q=80", description: "Traditional pulav made with seeraga samba rice", category: "Pulao" },
+            { id: "kg-7", name: "Gongura Kodi Pulao", price: 330, photo: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=800&q=80", description: "Spicy chicken pulao with tangy gongura leaves", category: "Pulao" },
+            { id: "kg-8", name: "Mutton Biryani (Bagara)", price: 420, photo: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=800&q=80", description: "Bagara rice served with mutton curry", category: "Biryani" },
+
+            // Curries
+            { id: "kg-9", name: "Chapala Pulusu", price: 180, photo: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&q=80", description: "Tangy and spicy fish curry (Full)", category: "Curries" },
+            { id: "kg-10", name: "Mutton Curry", price: 320, photo: "https://images.unsplash.com/photo-1585937421612-70a008356f36?w=800&q=80", description: "Traditional mutton curry (Full)", category: "Curries" },
+
+            // Family Packs
+            { id: "kg-11", name: "Chicken Fry Piece Pulao Family Pack", price: 800, photo: "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=800&q=80", description: "Serves 3-4 people", category: "Family Packs" },
+
+            // Desserts
+            { id: "kg-12", name: "Junnu", price: 100, photo: "https://images.unsplash.com/photo-1517244683847-7454b94e417e?w=800&q=80", description: "Traditional Kharvas sweet", category: "Desserts" }
+        ]
+    },
 
     // CLOUD KITCHENS
     {
