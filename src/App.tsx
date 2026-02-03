@@ -15,28 +15,33 @@ import { MenuManagement } from "./pages/admin/Menu";
 import { AdminSettings } from "./pages/admin/Settings";
 
 
+import ScrollToTop from "./components/ScrollToTop";
+
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Index />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/cart" element={<Cart />} />
-      <Route path="/order-summary" element={<OrderSummary />} />
-      <Route path="/payment" element={<Payment />} />
-      <Route path="/restaurant/:slug" element={<RestaurantDetails />} />
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/order-summary" element={<OrderSummary />} />
+        <Route path="/payment" element={<Payment />} />
+        <Route path="/restaurant/:slug" element={<RestaurantDetails />} />
 
-      {/* Admin Routes */}
-      <Route path="/admin/login" element={<AdminLogin />} />
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<Navigate to="/admin/dashboard" replace />} />
-        <Route path="dashboard" element={<AdminDashboard />} />
-        {/* Placeholders for future routes */}
-        <Route path="restaurants" element={<RestaurantList />} />
-        <Route path="menu" element={<MenuManagement />} />
-        <Route path="settings" element={<AdminSettings />} />
-      </Route>
-    </Routes>
+        {/* Admin Routes */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Navigate to="/admin/dashboard" replace />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
+          {/* Placeholders for future routes */}
+          <Route path="restaurants" element={<RestaurantList />} />
+          <Route path="menu" element={<MenuManagement />} />
+          <Route path="settings" element={<AdminSettings />} />
+        </Route>
+      </Routes>
+    </>
   );
 }
 

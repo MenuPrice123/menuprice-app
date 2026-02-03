@@ -28,10 +28,11 @@ const Cart = () => {
         }
     };
 
-    const itemTotal = total;
-    const taxes = Math.round(total * 0.05);
-    const platformFee = 10;
-    const finalTotal = itemTotal + taxes + platformFee;
+    const originalPriceTotal = items.reduce((acc, item) => acc + ((item.swiggy_price || item.price) * item.quantity), 0);
+    const itemTotal = total; // This is "Our site price total"
+    const totalSavings = originalPriceTotal - itemTotal;
+    const gstAmount = itemTotal * 0.05;
+    const finalTotal = itemTotal + gstAmount;
 
     if (items.length === 0) {
         return (
@@ -76,7 +77,15 @@ const Cart = () => {
                                         <div className="flex-1">
                                             <div className="flex justify-between items-start mb-2">
                                                 <h3 className="font-semibold text-gray-800">{item.name}</h3>
-                                                <span className="font-bold text-gray-900">₹{item.price * item.quantity}</span>
+                                                <div className="text-right">
+                                                    <div className="font-bold text-gray-900">₹{item.price * item.quantity}</div>
+                                                    {item.swiggy_price && item.swiggy_price > item.price && (
+                                                        <>
+                                                            <div className="text-xs text-gray-400 line-through">₹{item.swiggy_price * item.quantity}</div>
+                                                            <div className="text-xs font-bold text-green-600">Saved ₹{(item.swiggy_price - item.price) * item.quantity}</div>
+                                                        </>
+                                                    )}
+                                                </div>
                                             </div>
 
 
@@ -101,20 +110,26 @@ const Cart = () => {
                             </div>
                             <div className="p-4 space-y-3">
                                 <div className="flex justify-between text-gray-600">
-                                    <span>Item Total</span>
-                                    <span>₹{itemTotal}</span>
+                                    <span>Original price total</span>
+                                    <span>₹{originalPriceTotal.toFixed(2)}</span>
                                 </div>
                                 <div className="flex justify-between text-gray-600">
-                                    <span className="flex items-center gap-1">Taxes & Charges <Info className="w-3 h-3 text-gray-400" /></span>
-                                    <span>₹{taxes}</span>
+                                    <span>Our site price total</span>
+                                    <span>₹{itemTotal.toFixed(2)}</span>
                                 </div>
-                                <div className="flex justify-between text-gray-600">
-                                    <span>Platform Fee</span>
-                                    <span>₹{platformFee}</span>
+                                {totalSavings > 0 && (
+                                    <div className="flex justify-between text-green-600 font-medium">
+                                        <span>Total Savings</span>
+                                        <span>-₹{totalSavings.toFixed(2)}</span>
+                                    </div>
+                                )}
+                                <div className="flex justify-between text-gray-600 text-sm">
+                                    <span className="flex items-center gap-1">GST (5%) <Info className="w-3 h-3 text-gray-400" /></span>
+                                    <span>₹{gstAmount.toFixed(2)}</span>
                                 </div>
                                 <div className="border-t pt-3 mt-3 flex justify-between font-bold text-lg text-gray-900">
                                     <span>To Pay</span>
-                                    <span>₹{finalTotal}</span>
+                                    <span>₹{finalTotal.toFixed(2)}</span>
                                 </div>
                             </div>
                         </div>

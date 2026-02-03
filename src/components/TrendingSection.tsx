@@ -1,6 +1,6 @@
-
 import { Restaurant } from "@/types/restaurant";
 import { RestaurantCard } from "./RestaurantCard";
+import { calculatePriceForTwo } from "@/lib/priceUtils";
 
 interface TrendingSectionProps {
     restaurants: Restaurant[];
@@ -35,6 +35,7 @@ export const TrendingSection = ({ restaurants }: TrendingSectionProps) => {
                                 description={restaurant.description}
                                 rating={restaurant.rating}
                                 isVeg={restaurant.is_veg}
+                                priceForTwo={calculatePriceForTwo(restaurant.menu || [])}
                             />
                         </div>
                     ))}

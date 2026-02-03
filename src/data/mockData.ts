@@ -32,6 +32,7 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
             { id: "vt-onion-rava", name: "Onion Rava Dosa", price: 85, swiggy_price: 145, photo: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=800&q=80", description: "Rava dosa with onions", category: "Rava Dosa" },
             { id: "vt-vada", name: "Vada (2 pcs)", price: 75, photo: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=800&q=80", description: "Crispy lentil donuts", category: "Vada" }
         ]
+
     },
     {
         id: "r2",
@@ -375,5 +376,7 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         menu: [
             { id: "hf-4", name: "Basil Pesto Jar", price: 300, photo: "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=800&q=80", description: "200g Fresh Pesto", category: "Sauces" }
         ]
+
+
     }
 ];

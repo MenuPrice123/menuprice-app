@@ -17,6 +17,7 @@ interface RestaurantCardProps {
   description?: string;
   rating?: number;
   isVeg?: boolean;
+  priceForTwo?: number;
 }
 
 export const RestaurantCard = ({
@@ -28,7 +29,7 @@ export const RestaurantCard = ({
   externalUrl,
   description,
   rating,
-  isVeg,
+  priceForTwo,
 }: RestaurantCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -92,7 +93,7 @@ export const RestaurantCard = ({
           </div>
 
           <div className="w-full py-2 bg-yellow-100 text-yellow-800 rounded-lg font-bold text-sm text-center">
-            ₹ Price for two
+            {priceForTwo ? `₹${priceForTwo} for two` : '₹ Price for two'}
           </div>
         </div>
       </div>
